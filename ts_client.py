@@ -47,9 +47,9 @@ class TsClient:
         elif event.location == FeedbackEventLocation.Chest or event.location == FeedbackEventLocation.Stomach:
             return "_body_hit.ts_asset"
         elif event.location == FeedbackEventLocation.LeftArm:
-            return "_left_arm_hit.ts_asset"
+            return "_left_hand_hit.ts_asset"
         elif event.location == FeedbackEventLocation.RightArm:
-            return "_right_arm_hit.ts_asset"
+            return "_right_hand_hit.ts_asset"
         elif event.location == FeedbackEventLocation.LeftLeg:
             return "_left_leg_hit.ts_asset"
         elif event.location == FeedbackEventLocation.RightLeg:

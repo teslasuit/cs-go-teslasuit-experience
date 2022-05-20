@@ -44,10 +44,9 @@ class TsPlaylist:
         multipliers = self.player.create_touch_multipliers(frequency_percent, intensity_percent, intensity_percent)
         self.player.set_playable_multipliers(asset_info.playable_id, multipliers)
         # start if not playing
-        if not asset_info.is_playing:
-            print("Play:", asset_info.name)
-            asset_info.is_playing = True
-            self.player.play_playable(asset_info.playable_id)
+        print("Play [asset, intensity_percent]:", asset_info.name, intensity_percent)
+        asset_info.is_playing = True
+        self.player.play_playable(asset_info.playable_id)
 
     def stop(self, name):
         asset_info = self.assets.get(name)

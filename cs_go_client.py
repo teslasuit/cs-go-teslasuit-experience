@@ -11,7 +11,7 @@ TN_PORT = "2121"
 TN_HOST = "127.0.0.1"
 
 # Weapon codes from https://wiki.alliedmods.net/Counter-Strike:_Global_Offensive_Weapons
-WEAPON_CODES = 
+WEAPON_CODES = \
 {
 # Gear
 "c4", "knife", "taser", "shield", "bumpmine", "breachcharge",
@@ -54,8 +54,8 @@ class PlayerDamageEventParser:
         self.hit_group = HitGroup(int(damage_dict["hitgroup"]))
 
     def __str__(self):
-        return "health: " + str(self.health) + ", armor: " + str(self.armor) + "weapon: " + str(self.weapon) +
-            "dmg_health: " + str(self.dmg_health) + "dmg_armor: " + str(self.dmg_armor) + "hit_group: " + str(self.hitgroup)
+        return "health: " + str(self.health) + ", armor: " + str(self.armor) + ", weapon: " + str(self.weapon) + \
+            ", dmg_health: " + str(self.dmg_health) + ", dmg_armor: " + str(self.dmg_armor) + ", hit_group: " + str(self.hit_group)
 
 class TsGoDamageListener:
     def __init__(self):
@@ -92,7 +92,7 @@ class TsGoDamageListener:
         haptic_event = self.convert_damage_to_haptic_event(damage_event)
         if self.event_callback != None:
             print(damage_event)
-            self.event_callback(haptic_event)
+            self.event_callback({haptic_event})
         else:
             print(damage_event)
             print("CS GO client: no client subscribed to events")
