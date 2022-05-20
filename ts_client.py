@@ -42,7 +42,7 @@ class TsClient:
     def get_asset_name(self, event):
         if event.type != FeedbackEventType.Hit:
             return None
-        if event.location == FeedbackEventLocation.Generic or event.location == FeedbackEventLocation.Head:
+        if event.location == FeedbackEventLocation.Generic or event.location == FeedbackEventLocation.Head  or event.location == FeedbackEventLocation.Lethal:
             return "_full_body_hit.ts_asset"
         elif event.location == FeedbackEventLocation.Chest or event.location == FeedbackEventLocation.Stomach:
             return "_body_hit.ts_asset"

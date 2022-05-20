@@ -26,6 +26,7 @@ class FeedbackEventLocation(IntEnum):
     RightArm = 6
     LeftLeg  = 7
     RightLeg = 8
+    Lethal   = 9
 
 class FeedbackEvent:
     def __init__(self, is_enable=True, is_continue=True, type=FeedbackEventType.Undefined, direction=FeedbackEventDirection.Undefined, location=FeedbackEventLocation.Undefined, intensity_percent=float(0), frequency_percent=float(0)):

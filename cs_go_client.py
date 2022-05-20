@@ -37,6 +37,7 @@ class HitGroup(IntEnum):
     RightArm = 5
     LeftLeg  = 6
     RightLeg = 7
+    Lethal   = 8
 
 class PlayerDamageEventParser:
     def __init__(self, damage_str: str):
