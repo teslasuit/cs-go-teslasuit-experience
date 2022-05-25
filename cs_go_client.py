@@ -79,7 +79,6 @@ class TsGoDamageListener:
     def read_handedness(self):
         cl_righthand = b"cl_righthand"
         handedness_str = self.get_var(cl_righthand)
-        print(b"var " + cl_righthand + b" is " + handedness_str.encode("utf-8"))
         handedness_val = int(handedness_str)
         if handedness_str == None:
             return WEAPON_HAND
