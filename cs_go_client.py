@@ -1,5 +1,6 @@
 import sys
 import ast
+import re
 import signal
 import binascii
 import telnetlib
@@ -77,16 +78,34 @@ class TsGoDamageListener:
 
     def read_handedness(self):
         cl_righthand = b"cl_righthand"
-        cl_righthand_out_l = b"\"cl_righthand\" = \"0\""
-        self.tn.write(cl_righthand + b"\n")
-        line = b""
-        while not(cl_righthand) in line:
-            line = self.tn.read_until(b"\n")
-
-        if cl_righthand_out_l in line:
-            return HitGroup.LeftArm
-        else:
+        handedness_str = self.get_var(cl_righthand)
+        print(b"var " + cl_righthand + b" is " + handedness_str.encode("utf-8"))
+        handedness_val = int(handedness_str)
+        if handedness_str == None:
+            return WEAPON_HAND
+        if handedness_val > 0:
             return HitGroup.RightArm
+        else:
+            return HitGroup.LeftArm
+
+    def get_var(self, command: bytes):
+        command_unknown_str = ("Unknown command \"" + command.decode("utf-8") + "\"")
+        cmd_unkn_str_b = command_unknown_str.encode("utf-8")
+        self.tn.write(command + b"\n")
+        line = b""
+        response_received = False
+        while not(response_received):
+            line = self.tn.read_until(b"\n")
+            if cmd_unkn_str_b in line:
+                response_received = True
+                return None
+            if command in line:
+                response_received = True
+                expr = re.compile(b'"([^"]*)"')
+                res = expr.findall(line)
+                return res[1].decode("utf-8")
+        return None
+
 
     def try_connect(self):
         try:
