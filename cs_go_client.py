@@ -79,9 +79,9 @@ class TsGoDamageListener:
     def read_handedness(self):
         cl_righthand = b"cl_righthand"
         handedness_str = self.get_var(cl_righthand)
-        handedness_val = int(handedness_str)
         if handedness_str == None:
             return WEAPON_HAND
+        handedness_val = int(handedness_str)
         if handedness_val > 0:
             return HitGroup.RightArm
         else:
