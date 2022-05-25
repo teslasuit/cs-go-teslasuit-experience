@@ -75,6 +75,19 @@ class TsGoDamageListener:
     def set_event_callback(self, callback):
         self.event_callback = callback
 
+    def read_handedness(self):
+        cl_righthand = b"cl_righthand"
+        cl_righthand_out_l = b"\"cl_righthand\" = \"0\""
+        self.tn.write(cl_righthand + b"\n")
+        line = b""
+        while not(cl_righthand) in line:
+            line = self.tn.read_until(b"\n")
+
+        if cl_righthand_out_l in line:
+            return HitGroup.LeftArm
+        else:
+            return HitGroup.RightArm
+
     def try_connect(self):
         try:
             self.tn = telnetlib.Telnet(self.host, self.port)
@@ -83,6 +96,7 @@ class TsGoDamageListener:
             print("  -netconport " + str(self.port))
             return False
         self.tn.write(b"echo TS CS:GO Damage Handler Activated\n")
+        WEAPON_HAND = self.read_handedness()
         return True
 
     def process(self):
