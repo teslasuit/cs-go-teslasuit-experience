@@ -1,7 +1,9 @@
 import sys
+import ast
 import signal
 import binascii
 import telnetlib
+import cs_go_weapons
 from time import sleep
 from enum import IntEnum, unique
 from ff_event import FeedbackEvent, FeedbackEventType, FeedbackEventDirection, FeedbackEventLocation
@@ -9,23 +11,6 @@ from ff_event import FeedbackEvent, FeedbackEventType, FeedbackEventDirection, F
 # Config
 TN_PORT = "2121"
 TN_HOST = "127.0.0.1"
-
-# Weapon codes from https://wiki.alliedmods.net/Counter-Strike:_Global_Offensive_Weapons
-WEAPON_CODES = \
-{
-# Gear
-"c4", "knife", "taser", "shield", "bumpmine", "breachcharge",
-# Grenade
-"decoy", "flashbang", "healthshot", "hegrenade", "incgrenade", "molotov", "smokegrenade", "tagrenade",
-# Heavy
-"m249", "mag7", "negev", "nova", "sawedoff", "xm1014",
-# Pistol
-"cz75a", "deagle", "elite", "fiveseven", "glock", "hkp2000", "p250", "revolver", "tec9", "usp_silencer", 
-# Rifle
-"ak47", "aug", "awp", "famas", "g3sg1", "galilar", "m4a1", "m4a1_silencer", "scar20", "sg556", "ssg08",
-# SMG
-"bizon", "mac10", "mp5sd", "mp7", "mp9", "p90", "ump45"
-}
 
 @unique
 class HitGroup(IntEnum):
@@ -39,14 +24,11 @@ class HitGroup(IntEnum):
     RightLeg = 7
     Lethal   = 8
 
+WEAPON_HAND = HitGroup.RightArm
+
 class PlayerDamageEventParser:
     def __init__(self, damage_str: str):
-        damage_dict = {}
-        damage_str = damage_str.strip().replace(" ", "")
-        fields = damage_str[damage_str.find("{") + 1 : damage_str.find("}")].split(",")
-        for row in fields:
-            kv = row.split(":")
-            damage_dict[kv[0]] = kv[1]
+        damage_dict = dict_from_ts_package(damage_str)
         self.health = int(damage_dict["health"])
         self.armor = int(damage_dict["armor"])
         self.weapon = str(damage_dict["weapon"])
@@ -57,6 +39,24 @@ class PlayerDamageEventParser:
     def __str__(self):
         return "health: " + str(self.health) + ", armor: " + str(self.armor) + ", weapon: " + str(self.weapon) + \
             ", dmg_health: " + str(self.dmg_health) + ", dmg_armor: " + str(self.dmg_armor) + ", hit_group: " + str(self.hit_group)
+
+    @staticmethod
+    def get_keyword():
+        return b"TsDamage"
+
+class WeaponFireEventParser:
+    def __init__(self, damage_str: str):
+        fire_event_dict = dict_from_ts_package(damage_str)
+        self.weapon = str(fire_event_dict["weapon"])
+        self.is_silenced = bool(ast.literal_eval(fire_event_dict["is_silenced"].lower().capitalize()))
+
+    def __str__(self):
+        return "weapon: " + str(self.weapon) + ", is_silenced: " + str(self.is_silenced)
+
+    @staticmethod
+    def get_keyword():
+        return b"TsWeaponFire"
+
 
 class TsGoDamageListener:
     def __init__(self):
@@ -87,15 +87,24 @@ class TsGoDamageListener:
 
     def process(self):
         line = b""
-        while not(b"TsDamage") in line:
+        package_received = False
+        haptic_event = None
+        while not(package_received):
             line = self.tn.read_until(b"\n")
-        damage_event = PlayerDamageEventParser(line.decode("utf-8"))
-        haptic_event = self.convert_damage_to_haptic_event(damage_event)
+            if WeaponFireEventParser.get_keyword() in line:
+                package_received = True
+                fire_event = WeaponFireEventParser(line.decode("utf-8"))
+                print(fire_event)
+                haptic_event = self.convert_weapon_fire_to_haptic_event(fire_event)
+            if PlayerDamageEventParser.get_keyword() in line:
+                package_received = True
+                damage_event = PlayerDamageEventParser(line.decode("utf-8"))
+                print(damage_event)
+                haptic_event = self.convert_damage_to_haptic_event(damage_event)
+
         if self.event_callback != None:
-            print(damage_event)
             self.event_callback({haptic_event})
         else:
-            print(damage_event)
             print("CS GO client: no client subscribed to events")
 
     def convert_damage_to_haptic_event(self, damage_event):
@@ -103,6 +112,15 @@ class TsGoDamageListener:
         return FeedbackEvent(type=FeedbackEventType.Hit,
             direction=FeedbackEventDirection.Front,
             location=FeedbackEventLocation(damage_event.hit_group.value + 1),
+            intensity_percent=percent_to_intensity(dmg_percent, float(0.3), float(1)))
+
+    def convert_weapon_fire_to_haptic_event(self, weapon_fire_event):
+        dmg_percent = 0
+        if weapon_fire_event.weapon in cs_go_weapons.WEAPON_FIRE_FEEDBACK:
+            dmg_percent = cs_go_weapons.WEAPON_FIRE_FEEDBACK[weapon_fire_event.weapon]
+        return FeedbackEvent(type=FeedbackEventType.Recoil,
+            direction=FeedbackEventDirection.Front,
+            location=FeedbackEventLocation(WEAPON_HAND.value + 1),
             intensity_percent=percent_to_intensity(dmg_percent, float(0.3), float(1)))
 
 def normalize(value, min, max):
@@ -114,4 +132,15 @@ def normalize(value, min, max):
         return float(value - min) / float(max - min)
 
 def percent_to_intensity(value, min, max):
+    if value == 0:
+        return 0
     return float(max - min) * float(value) + float(min)
+
+def dict_from_ts_package(ts_package_str: str):
+    package_dict = {}
+    ts_package_str = ts_package_str.strip().replace(" ", "")
+    fields = ts_package_str[ts_package_str.find("{") + 1 : ts_package_str.find("}")].split(",")
+    for row in fields:
+        kv = row.split(":")
+        package_dict[kv[0]] = kv[1]
+    return package_dict

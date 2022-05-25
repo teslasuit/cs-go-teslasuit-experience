@@ -4,6 +4,7 @@ from enum import IntEnum, unique
 class FeedbackEventType(IntEnum):
     Undefined = 0
     Hit = 1
+    Recoil = 2
 
 @unique
 class FeedbackEventDirection(IntEnum):
