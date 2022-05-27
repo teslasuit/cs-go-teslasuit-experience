@@ -7,6 +7,18 @@ class FeedbackEventType(IntEnum):
     Recoil = 2
 
 @unique
+class FeedbackEventWeaponType(IntEnum):
+    Undefined = 0
+    Pistol = 1
+    SMG = 2
+    Rifle = 3
+    Sniper = 4
+    Shotgun = 5
+    Knife = 6
+    Healthshot = 7
+    Throwable = 8
+
+@unique
 class FeedbackEventDirection(IntEnum):
     Undefined = 0
     Front = 1
@@ -30,10 +42,11 @@ class FeedbackEventLocation(IntEnum):
     Lethal   = 9
 
 class FeedbackEvent:
-    def __init__(self, is_enable=True, is_continue=True, type=FeedbackEventType.Undefined, direction=FeedbackEventDirection.Undefined, location=FeedbackEventLocation.Undefined, intensity_percent=float(0), frequency_percent=float(0)):
+    def __init__(self, is_enable=True, is_continue=True, type=FeedbackEventType.Undefined, weapon_type=FeedbackEventWeaponType.Undefined, direction=FeedbackEventDirection.Undefined, location=FeedbackEventLocation.Undefined, intensity_percent=float(0), frequency_percent=float(0)):
         self.is_enable = is_enable
         self.is_continue = is_continue
         self.type = type
+        self.weapon_type = weapon_type
         self.direction = direction
         self.location = location
         self.intensity_percent = intensity_percent
