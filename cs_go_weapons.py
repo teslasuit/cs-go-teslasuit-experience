@@ -18,7 +18,7 @@ WEAPON_CODES = \
 WEAPON_FIRE_FEEDBACK = \
 {
 # Gear
-"c4" : 0, "knife": 0.4, "taser": 0, "shield": 0, "bumpmine": 0, "breachcharge": 0,
+"c4" : 0.2, "knife": 0.4, "taser": 0.3, "shield": 0.5, "bumpmine": 0.2, "breachcharge": 0.2,
 # Grenade
 "decoy" : 0.4, "flashbang" : 0.4, "healthshot" : 0.4, "hegrenade" : 0.4, "incgrenade" : 0.4, "molotov" : 0.4, "smokegrenade" : 0.4, "tagrenade" : 0.4,
 # Heavy
