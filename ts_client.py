@@ -3,7 +3,7 @@ from teslasuit_sdk.subsystems import ts_haptic
 from teslasuit_sdk.ts_mapper import TsBone2dIndex
 
 import ts_playlist
-from ff_event import FeedbackEvent, FeedbackEventType, FeedbackEventDirection, FeedbackEventLocation
+from ff_event import FeedbackEvent, FeedbackEventType, FeedbackEventDirection, FeedbackEventLocation, FeedbackEventWeaponType
 
 class TsClient:
     def init(self, lib_path=None):

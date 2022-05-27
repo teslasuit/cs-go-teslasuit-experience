@@ -25,7 +25,7 @@ class HitGroup(IntEnum):
     RightLeg = 7
     Lethal   = 8
 
-WEAPON_HAND = HitGroup.RightArm
+WEAPON_HAND = FeedbackEventDirection.Right
 
 class PlayerDamageEventParser:
     def __init__(self, damage_str: str):
@@ -36,6 +36,8 @@ class PlayerDamageEventParser:
         self.dmg_health = int(damage_dict["dmg_health"])
         self.dmg_armor = int(damage_dict["dmg_armor"])
         self.hit_group = HitGroup(int(damage_dict["hitgroup"]))
+        self.impact_height = float(damage_dict["imp_height"])
+        self.impact_angle = float(damage_dict["imp_angle"])
 
     def __str__(self):
         return "health: " + str(self.health) + ", armor: " + str(self.armor) + ", weapon: " + str(self.weapon) + \
@@ -83,9 +85,9 @@ class TsGoDamageListener:
             return WEAPON_HAND
         handedness_val = int(handedness_str)
         if handedness_val > 0:
-            return HitGroup.RightArm
+            return FeedbackEventDirection.Right
         else:
-            return HitGroup.LeftArm
+            return FeedbackEventDirection.Left
 
     def get_var(self, command: bytes):
         command_unknown_str = ("Unknown command \"" + command.decode("utf-8") + "\"")
@@ -142,18 +144,38 @@ class TsGoDamageListener:
     def convert_damage_to_haptic_event(self, damage_event):
         dmg_percent = normalize(damage_event.dmg_health, float(0), float(100))
         return FeedbackEvent(type=FeedbackEventType.Hit,
-            direction=FeedbackEventDirection.Front,
+            direction=convert_angle_to_direction(damage_event.impact_angle),
             location=FeedbackEventLocation(damage_event.hit_group.value + 1),
             intensity_percent=percent_to_intensity(dmg_percent, float(0.3), float(1)))
 
     def convert_weapon_fire_to_haptic_event(self, weapon_fire_event):
-        dmg_percent = 0
-        if weapon_fire_event.weapon in cs_go_weapons.WEAPON_FIRE_FEEDBACK:
-            dmg_percent = cs_go_weapons.WEAPON_FIRE_FEEDBACK[weapon_fire_event.weapon]
         return FeedbackEvent(type=FeedbackEventType.Recoil,
-            direction=FeedbackEventDirection.Front,
+            direction=WEAPON_HAND,
             location=FeedbackEventLocation(WEAPON_HAND.value + 1),
-            intensity_percent=dmg_percent, float(0.3), float(1))
+            intensity_percent=get_weapon_feedback_percent(weapon_fire_event.weapon),
+            weapon_type=get_weapon_type(weapon_fire_event.weapon))
+
+def get_weapon_feedback_percent(code):
+    if code in cs_go_weapons.WEAPON_FIRE_FEEDBACK:
+            return cs_go_weapons.WEAPON_FIRE_FEEDBACK[code]
+    return 0
+
+def get_weapon_type(code):
+    if code in cs_go_weapons.WEAPON_TYPES:
+            return cs_go_weapons.WEAPON_TYPES[code]
+    return FeedbackEventWeaponType.Undefined
+
+def convert_angle_to_direction(angle):
+    if (angle < 90):
+        return FeedbackEventDirection.FrontLeft
+    elif (angle < 180):
+        return FeedbackEventDirection.BackLeft
+    elif (angle < 270):
+        return FeedbackEventDirection.BackRight
+    elif (angle < 360):
+        return FeedbackEventDirection.FrontRight
+    return FeedbackEventDirection.Front
+
 
 def normalize(value, min, max):
     if (value > max):

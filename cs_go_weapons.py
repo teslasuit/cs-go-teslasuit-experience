@@ -1,3 +1,5 @@
+from ff_event import FeedbackEventWeaponType
+
 # Weapon codes from https://wiki.alliedmods.net/Counter-Strike:_Global_Offensive_Weapons
 WEAPON_CODES = \
 {
@@ -29,4 +31,20 @@ WEAPON_FIRE_FEEDBACK = \
 "ak47" : 0.75, "aug" : 0.65, "awp" : 1, "famas" : 0.55, "g3sg1" : 0.85, "galilar" : 0.55, "m4a1" : 0.55, "m4a1_silencer" : 0.5, "scar20" : 0.85, "sg556" : 0.65, "ssg08" : 0.7,
 # SMG
 "bizon" : 0.45, "mac10" : 0.45, "mp5sd" : 0.45, "mp7" : 0.45, "mp9" : 0.45, "p90" : 0.45, "ump45" : 0.45
+}
+
+WEAPON_TYPES = \
+{
+# Gear
+"c4" : FeedbackEventWeaponType.Undefined, "knife": FeedbackEventWeaponType.Knife, "taser": FeedbackEventWeaponType.Undefined, "shield": FeedbackEventWeaponType.Undefined, "bumpmine": FeedbackEventWeaponType.Undefined, "breachcharge": FeedbackEventWeaponType.Undefined,
+# Grenade
+"decoy" : FeedbackEventWeaponType.Throwable, "flashbang" : FeedbackEventWeaponType.Throwable, "healthshot" : FeedbackEventWeaponType.Healthshot, "hegrenade" : FeedbackEventWeaponType.Throwable, "incgrenade" : FeedbackEventWeaponType.Throwable, "molotov" : FeedbackEventWeaponType.Throwable, "smokegrenade" : FeedbackEventWeaponType.Throwable, "tagrenade" : FeedbackEventWeaponType.Throwable,
+# Heavy
+"m249" : FeedbackEventWeaponType.Rifle, "mag7" : FeedbackEventWeaponType.Shotgun, "negev" : FeedbackEventWeaponType.Rifle, "nova" : FeedbackEventWeaponType.Shotgun, "sawedoff" : FeedbackEventWeaponType.Shotgun, "xm1014" : FeedbackEventWeaponType.Shotgun,
+# Pistol
+"cz75a" : FeedbackEventWeaponType.Pistol, "deagle" : FeedbackEventWeaponType.Pistol, "elite" : FeedbackEventWeaponType.Pistol, "fiveseven" : FeedbackEventWeaponType.Pistol, "glock" : FeedbackEventWeaponType.Pistol, "hkp2000" : FeedbackEventWeaponType.Pistol, "p250" : FeedbackEventWeaponType.Pistol, "revolver" : FeedbackEventWeaponType.Pistol, "tec9" : FeedbackEventWeaponType.Pistol, "usp_silencer" : FeedbackEventWeaponType.Pistol, 
+# Rifle
+"ak47" : FeedbackEventWeaponType.Rifle, "aug" : FeedbackEventWeaponType.Rifle, "awp" : FeedbackEventWeaponType.Sniper, "famas" : FeedbackEventWeaponType.Rifle, "g3sg1" : FeedbackEventWeaponType.Sniper, "galilar" : FeedbackEventWeaponType.Rifle, "m4a1" : FeedbackEventWeaponType.Rifle, "m4a1_silencer" : FeedbackEventWeaponType.Rifle, "scar20" : FeedbackEventWeaponType.Sniper, "sg556" : FeedbackEventWeaponType.Rifle, "ssg08" : FeedbackEventWeaponType.Sniper,
+# SMG
+"bizon" : FeedbackEventWeaponType.SMG, "mac10" : FeedbackEventWeaponType.SMG, "mp5sd" : FeedbackEventWeaponType.SMG, "mp7" : FeedbackEventWeaponType.SMG, "mp9" : FeedbackEventWeaponType.SMG, "p90" : FeedbackEventWeaponType.SMG, "ump45" : FeedbackEventWeaponType.SMG
 }
