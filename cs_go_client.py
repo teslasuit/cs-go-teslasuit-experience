@@ -1,5 +1,6 @@
 import sys
 import ast
+import re
 import signal
 import binascii
 import telnetlib
@@ -75,6 +76,36 @@ class TsGoDamageListener:
     def set_event_callback(self, callback):
         self.event_callback = callback
 
+    def read_handedness(self):
+        cl_righthand = b"cl_righthand"
+        handedness_str = self.get_var(cl_righthand)
+        if handedness_str == None:
+            return WEAPON_HAND
+        handedness_val = int(handedness_str)
+        if handedness_val > 0:
+            return HitGroup.RightArm
+        else:
+            return HitGroup.LeftArm
+
+    def get_var(self, command: bytes):
+        command_unknown_str = ("Unknown command \"" + command.decode("utf-8") + "\"")
+        cmd_unkn_str_b = command_unknown_str.encode("utf-8")
+        self.tn.write(command + b"\n")
+        line = b""
+        response_received = False
+        while not(response_received):
+            line = self.tn.read_until(b"\n")
+            if cmd_unkn_str_b in line:
+                response_received = True
+                return None
+            if command in line:
+                response_received = True
+                expr = re.compile(b'"([^"]*)"')
+                res = expr.findall(line)
+                return res[1].decode("utf-8")
+        return None
+
+
     def try_connect(self):
         try:
             self.tn = telnetlib.Telnet(self.host, self.port)
@@ -83,6 +114,7 @@ class TsGoDamageListener:
             print("  -netconport " + str(self.port))
             return False
         self.tn.write(b"echo TS CS:GO Damage Handler Activated\n")
+        WEAPON_HAND = self.read_handedness()
         return True
 
     def process(self):
