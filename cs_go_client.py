@@ -153,7 +153,7 @@ class TsGoDamageListener:
         return FeedbackEvent(type=FeedbackEventType.Recoil,
             direction=FeedbackEventDirection.Front,
             location=FeedbackEventLocation(WEAPON_HAND.value + 1),
-            intensity_percent=percent_to_intensity(dmg_percent, float(0.3), float(1)))
+            intensity_percent=dmg_percent, float(0.3), float(1))
 
 def normalize(value, min, max):
     if (value > max):
