@@ -80,7 +80,7 @@ class TsClient:
             elif event.weapon_type == FeedbackEventWeaponType.Knife:
                 return "_recoil_knife_l.ts_asset" if event.direction == FeedbackEventDirection.Left else "_recoil_knife_r.ts_asset"
             elif event.weapon_type == FeedbackEventWeaponType.Healthshot:
-                return "_recoil_healthshot_l.ts_asset" if event.direction == FeedbackEventDirection.Left else "_recoil_healthshot_r.ts_asset"
+                return "_recoil_healthshot.ts_asset"
             elif event.weapon_type == FeedbackEventWeaponType.Throwable:
                 return "_recoil_throwable_l.ts_asset" if event.direction == FeedbackEventDirection.Left else "_recoil_throwable_r.ts_asset"
         return None

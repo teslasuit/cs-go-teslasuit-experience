@@ -20,9 +20,9 @@ WEAPON_CODES = \
 WEAPON_FIRE_FEEDBACK = \
 {
 # Gear
-"c4" : 0.2, "knife": 0.4, "taser": 0.3, "shield": 0.5, "bumpmine": 0.2, "breachcharge": 0.2,
+"c4" : 0.2, "knife": 0.4, "knife_t": 0.4, "knife_gg": 0.4, "taser": 0.3, "shield": 0.5, "bumpmine": 0.2, "breachcharge": 0.2,
 # Grenade
-"decoy" : 0.4, "flashbang" : 0.4, "healthshot" : 0.4, "hegrenade" : 0.4, "incgrenade" : 0.4, "molotov" : 0.4, "smokegrenade" : 0.4, "tagrenade" : 0.4,
+"decoy" : 0.4, "flashbang" : 0.4, "healthshot" : 0.8, "hegrenade" : 0.4, "incgrenade" : 0.4, "molotov" : 0.4, "smokegrenade" : 0.4, "tagrenade" : 0.4,
 # Heavy
 "m249" : 1, "mag7" : 0.8, "negev" : 1, "nova" : 0.85, "sawedoff" : 1, "xm1014" : 0.85,
 # Pistol
@@ -36,7 +36,7 @@ WEAPON_FIRE_FEEDBACK = \
 WEAPON_TYPES = \
 {
 # Gear
-"c4" : FeedbackEventWeaponType.Undefined, "knife": FeedbackEventWeaponType.Knife, "taser": FeedbackEventWeaponType.Undefined, "shield": FeedbackEventWeaponType.Undefined, "bumpmine": FeedbackEventWeaponType.Undefined, "breachcharge": FeedbackEventWeaponType.Undefined,
+"c4" : FeedbackEventWeaponType.Throwable, "knife": FeedbackEventWeaponType.Knife, "knife_t": FeedbackEventWeaponType.Knife, "knifegg": FeedbackEventWeaponType.Knife, "taser": FeedbackEventWeaponType.Pistol, "shield": FeedbackEventWeaponType.Throwable, "bumpmine": FeedbackEventWeaponType.Throwable, "breachcharge": FeedbackEventWeaponType.Throwable,
 # Grenade
 "decoy" : FeedbackEventWeaponType.Throwable, "flashbang" : FeedbackEventWeaponType.Throwable, "healthshot" : FeedbackEventWeaponType.Healthshot, "hegrenade" : FeedbackEventWeaponType.Throwable, "incgrenade" : FeedbackEventWeaponType.Throwable, "molotov" : FeedbackEventWeaponType.Throwable, "smokegrenade" : FeedbackEventWeaponType.Throwable, "tagrenade" : FeedbackEventWeaponType.Throwable,
 # Heavy
