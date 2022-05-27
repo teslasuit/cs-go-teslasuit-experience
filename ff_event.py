@@ -27,6 +27,10 @@ class FeedbackEventDirection(IntEnum):
     Right = 4
     Up = 5
     Down = 6
+    FrontLeft = 7
+    FrontRight = 8
+    BackLeft = 9
+    BackRight = 10
 
 @unique
 class FeedbackEventLocation(IntEnum):
