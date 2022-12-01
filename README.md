@@ -14,7 +14,7 @@ Feedback is implemented for recoil with unique haptic animations and touch param
 
 ## Configuration
 1. Set launch option for CS:GO in game properties in steam: "-netconport 2121" to enable haptic event streaming from the game.
-2. Subscribe to haptic maps from workshop. Try link or find for 'haptic' keyword in CS:GO steam workshop searchhttps://steamcommunity.com/sharedfiles/filedetails/?id=2809580208.
+2. Subscribe to haptic maps from workshop. Try link or find for 'haptic' keyword in CS:GO steam workshop search https://steamcommunity.com/sharedfiles/filedetails/?id=2809580208.
 3. Connect Teslasuit device to PC and calibrate it in Control Center.
 
 ## Running
